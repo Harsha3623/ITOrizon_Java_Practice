@@ -15,21 +15,29 @@ public class Main {
         /**
          * Menu for Order management system
          */
-        System.out.println("------------------------------------");
-        System.out.println("------Order Management System---------");
-        System.out.println("----------------MENU------------------");
-        System.out.println("------------------------------------");
         while(true){
+            System.out.println("------------------------------------");
+            System.out.println("------Order Management System---------");
+            System.out.println("----------------MENU------------------");
+            System.out.println("------------------------------------");
+
             System.out.println("1--> Add Order");
+            //completed
             System.out.println("2--> View Order");
+            //completed
             System.out.println("3--> View By Order ID");
+            //TODO
             System.out.println("4--> Sort Order");
+            //Todo In progress
             System.out.println("5--> Delete Order");
+            //completed
             System.out.println("6--> Mark as Delivered");
+            //completed
             System.out.println("7--> Cancel Order");
+            //TODO
             System.out.println("8--> Generate Report");
             System.out.println("9--> Exit");
-            //Order or = new Order();
+            Order or = new Order();
 
             //Taking the user input
             System.out.println("Enter your choice");
@@ -40,16 +48,32 @@ public class Main {
                     AddOrderVerifier();
                     break;
                 case 2:
+                    or.viewOrder();
                     break;
                 case 3:
+                    sc.nextLine();
+                    while(true) {
+                        System.out.println("Enter the Order ID: ");
+                        String orderId = sc.nextLine();
+                        if (doesFileContainsOrderId(orderId)) {
+                            or.viewOrder(orderId);
+                            break;
+                        } else {
+                            System.out.println("Enter a valid orderID..");
+                            continue;
+                        }
+                    }
                     break;
                 case 4:
                     break;
                 case 5:
+                    or.deleteOrder();
                     break;
                 case 6:
+                    or.markDelivered();
                     break;
                 case 7:
+                    or.cancelOrder();
                     break;
                 case 8:
                     break;
@@ -66,18 +90,16 @@ public class Main {
 
 
     }
-    //implimenting AddOrderVerifier() method
+
+
+
+    //implementing AddOrderVerifier() method
     private static void AddOrderVerifier() {
-        sc.nextLine();
+        //sc.nextLine();
         while(true) {
+            sc.nextLine();
             System.out.println("Enter orderId");
             String ordId = sc.nextLine();
-            System.out.println("Enter order description");
-            String ordDes = sc.nextLine();
-            System.out.println("Enter delivery address");
-            String deliAdd = sc.nextLine();
-            System.out.println("enter the amount");
-            double amount = sc.nextDouble();
 
             //Check whether theorder id is present in the file or not
             if (doesFileContainsOrderId(ordId)) {
@@ -85,22 +107,35 @@ public class Main {
 
                     System.out.println("The order id is already exists");
                     continue;
-            } else {
+            }  else {
+                System.out.println("Enter order description");
+                String ordDes = sc.nextLine();
+                System.out.println("Enter delivery address");
+                String deliAdd = sc.nextLine();
+                System.out.println("enter the amount");
+                double amount = sc.nextDouble();
                 if (ordDes.isEmpty() || deliAdd.isEmpty() || amount < 0.0) {
                     System.out.println("Please enter the valid Values");
+                    continue;
                 } else {
+//                    //Adding the recquired space for the strings
+//                    if(ordId.length()<10){
+//                        ordId=addRecquiredSpace(ordId,10);
+//                    }
+
+                    //if()
                     Order or = new Order();
                     or.addOrder(ordId, ordDes, deliAdd, amount);
                     //the order id is not present in the file
 
-                    System.out.println("Order" + " added to the File");
+                    System.out.println("Order" + " added Successfully..");
                 }
             }
             System.out.println("Do you want to enter more order details(Y/N) ");
             char ch = sc.next().charAt(0);
-            if(ch=='Y'){
+            if(ch=='Y'||ch=='y'){
                 continue;
-            }else{
+            }else if(ch=='N'||ch=='n'){
                 break;
             }
         }
@@ -108,9 +143,16 @@ public class Main {
 
     }
 
+    private static String addRecquiredSpace(String str, int i) {
+        for(int num=str.length();num<i;num++){
+            str=str+" ";
+        }
+        return str;
+    }
+
     //implementing checking condition whather the order id is present in the file
     //or not
-    private static boolean doesFileContainsOrderId(String ordId) {
+     static boolean doesFileContainsOrderId(String ordId) {
         boolean contains=false;
         String filePath = "C:\\Users\\Harsha\\IdeaProjects\\Order Management System\\src\\localtime.txt";
 
