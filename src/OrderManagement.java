@@ -1,8 +1,9 @@
 public interface OrderManagement {
-     public abstract void addOrder(String ordId, String ordDes, String deliAdd, double amount);
+     public abstract void addOrder();
 
      public abstract void viewOrder();
 
+     //method overloading
      void viewOrder(String orderID);
 
      void markDelivered();
@@ -10,4 +11,8 @@ public interface OrderManagement {
      void cancelOrder();
 
      void deleteOrder();
+
+     void exit();
+
+     void sortOrder();
 }
