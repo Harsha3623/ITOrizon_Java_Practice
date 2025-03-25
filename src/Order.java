@@ -15,7 +15,7 @@ public class Order {
     Scanner sc = new Scanner(System.in);
     static {
             try {
-                reader = new BufferedReader(new FileReader("C:\\Users\\Harsha\\IdeaProjects\\Order Management System 2\\src\\localtime.txt"));
+                reader = new BufferedReader(new FileReader("C:\\Users\\Harsha\\IdeaProjects\\Order Management System 2\\src\\Order_Transaction.txt"));
                 String line;
                 while((line=reader.readLine())!=null){
                     String[] data = line.split(",");
@@ -35,7 +35,7 @@ public class Order {
     private String status;
     private String deliveryDate;
     //todo update the file path to correct file
-    final static String filePath = "C:\\Users\\Harsha\\IdeaProjects\\Order Management System\\src\\localtime.txt";
+    final static String filePath = "C:\\Users\\Harsha\\IdeaProjects\\Order Management System\\src\\Order_Transaction.txt";
 
     public Order(String orderId, String orderDescription, String deliveryAddress, String orderDate, double amount, String deliveryDate, String status) {
         this.orderId = orderId;
@@ -177,6 +177,6 @@ public class Order {
 
     //overriding toString method for writing back to file
     public String toString(){
-        return orderId+","+orderDescription+","+deliveryAddress+","+orderDate+","+amount+","+deliveryDate+","+status;
+        return String.format("|%10s|%20s|%25s|%20s|%10.2f|%20s|%11s|",orderId,orderDescription,deliveryAddress,orderDate,amount,deliveryDate,status);
     }
 }

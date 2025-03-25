@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ImplementedClass  implements OrderManagement{
@@ -21,20 +22,23 @@ public class ImplementedClass  implements OrderManagement{
     @Override
     public void viewOrder() {
     ArrayList<Order> array = Order.arr;
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("Order Id| order Description| Delivery Address | OrderDate | Amount| Delivery Date| Status");
-        System.out.println("-----------------------------------------------------------------------------------------");
+        array.sort(Comparator.comparing(order -> order.getOrderId()));
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("| Order Id | Order Description  |    Delivery Address     |     Order Date     |  Amount  |   Delivery Date    |   Status  |");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
             for (Order order : array) {
-                System.out.print(order.getOrderId()+" | ");
-                System.out.print(order.getOrderDescription()+" | ");
-                System.out.print(order.getDeliveryAddress()+" | ");
-                System.out.print(order.getOrderDate()+" | ");
-                System.out.print(order.getAmount()+" | ");
-                System.out.print(order.getDeliveryDate()+" | ");
-                System.out.print(order.getStatus()+" | ");
-                System.out.println();
+                System.out.println(order.toString());
+//                System.out.print(order.getOrderId()+" | ");
+//                System.out.print(order.getOrderDescription()+" | ");
+//                System.out.print(order.getDeliveryAddress()+" | ");
+//                System.out.print(order.getOrderDate()+" | ");
+//                System.out.print(order.getAmount()+" | ");
+//                System.out.print(order.getDeliveryDate()+" | ");
+//                System.out.print(order.getStatus()+" | ");
+//                System.out.println();
             }
+        System.out.println("\n\n");
 
 
         }
@@ -58,13 +62,17 @@ public class ImplementedClass  implements OrderManagement{
                 break;
             }
         }
+        System.out.println("\n\n");
 
     }
 
     @Override
     public void markDelivered() {
+        //sc.nextLine();
         outer: while(true){
+            //sc.nextLine();
             System.out.println("Enter a valid order id: ");
+            //sc.nextLine();
             String ordId = sc.nextLine();
             if(Order.hs.contains(ordId)){
                 for(Order order: Order.arr){
@@ -92,6 +100,7 @@ public class ImplementedClass  implements OrderManagement{
                 while(true) {
                     char ch = sc.nextLine().charAt(0);
                     if (ch == 'Y' || ch == 'y') {
+                        //sc.nextLine();
                         continue outer;
                     } else if (ch == 'n' || ch == 'N') {
                         break outer;
@@ -182,9 +191,11 @@ public class ImplementedClass  implements OrderManagement{
     public void exit() {
 
         //Todo Update the file path to the actual file path
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Harsha\\Desktop\\testingfile.txt"))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Harsha\\IdeaProjects\\Order Management System 2\\src\\Order_Transaction.txt"))){
         for(Order order: Order.arr){
-            writer.write(order.toString());
+            writer.write(order.getOrderId()+","+order.getOrderDescription()+","+
+                    order.getDeliveryAddress()+","+order.getOrderDate()+","+order.getAmount()+
+                    ","+order.getDeliveryDate()+","+order.getStatus());
             writer.newLine();
 
         }
@@ -196,7 +207,7 @@ public class ImplementedClass  implements OrderManagement{
 
     @Override
     public void sortOrder() {
-        outer: while(true){
+        outer: while(true) {
             System.out.println("----------Chose Sort Order property---------");
             System.out.println("1--> OrderID");
             System.out.println("2--> Order Description");
@@ -205,118 +216,240 @@ public class ImplementedClass  implements OrderManagement{
             System.out.println("5--> Amount");
             System.out.println("6--> Delivery Date Time ");
             System.out.println("7--> Exit");
-            int number = sc.nextInt();
-            if(number==7){
-                break outer;
+            int n,number = 0;
+            try {
+                n = sc.nextInt();
+                sc.nextLine();
+                if(n==7){
+                    break outer;
+                }
+                number=n;
+                
+            }catch (InputMismatchException e){
+                System.out.println("Enter a Integer value.");
+                sc.nextLine();
+                continue outer;
             }
             int ascOrDesc;
             while(true) {
                 System.out.println("----------Chose Sort Order property---------");
                 System.out.println("1--> Ascending");
                 System.out.println("2--> Descending");
-
-                int sortOrder = sc.nextInt();
-                if(sortOrder==1| sortOrder==2){
-                    ascOrDesc=sortOrder;
-                    break;
-                }else {
-                    System.out.println("enter a either 1 or 2");
-                    continue;
+                int sortOrder;
+                //handling input mismatch exception
+                try {
+                    sortOrder = sc.nextInt();
+                    sc.nextLine();
+                    if(sortOrder==1| sortOrder==2){
+                        ascOrDesc=sortOrder;
+                        break;
+                    }else {
+                        System.out.println("enter a either 1 or 2");
+                        continue;
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("Enter Integer Value .");
+                    sc.nextLine();
                 }
+                
             }
             //creating the local array list for sorting purpose
             ArrayList<Order> array = Order.arr;
-
+            //todo minimise it
             switch (number){
                 case 1:
+                    //sortBasedOnStatus(array,"OrderId",ascOrDesc);
                     if(ascOrDesc==1) {
                         array.sort(Comparator.comparing(order -> order.getOrderId()));
-
-                        viewOrder(array);
-                        break;
                     }else{
                         array.sort(Comparator.comparing((Order order) -> order.getOrderId()).reversed());
-
-                        viewOrder(array);
-                        break;
                     }
+                    viewOrder(array);
+                    break;
+                    //break;
                 case 2:
                     if(ascOrDesc==1){
                         array.sort(Comparator.comparing(order -> order.getOrderDescription()));
-                        viewOrder(array);
-                        break;
-                    }else{
-                        array.sort(Comparator.comparing((Order order) ->order.getOrderDescription()).reversed());
-                        viewOrder(array);
-                        break;
+                    }else {
+                        array.sort(Comparator.comparing((Order order) -> order.getOrderDescription()).reversed());
                     }
+                    viewOrder(array);
+                    break;
                 case 3:
                     if(ascOrDesc==1){
                         array.sort(Comparator.comparing(order -> order.getDeliveryAddress()));
-                        viewOrder(array);
-                        break;
                     }else{
                         array.sort(Comparator.comparing((Order order) ->order.getDeliveryAddress()).reversed());
-                        viewOrder(array);
-                        break;
                     }
+                    viewOrder(array);
+                    break;
                 case 4:
                     if(ascOrDesc==1){
                         array.sort(Comparator.comparing(order -> order.getOrderDate()));
-                        viewOrder(array);
-                        break;
                     }else{
                         array.sort(Comparator.comparing((Order order) ->order.getOrderDate()).reversed());
-                        viewOrder(array);
-                        break;
                     }
+                    viewOrder(array);
+                    break;
                 case 5:
                     if(ascOrDesc==1){
                         array.sort(Comparator.comparingDouble(order -> order.getAmount()));
-                        viewOrder(array);
-                        break;
                     }else{
                         array.sort(Comparator.comparingDouble((Order order) ->order.getAmount()).reversed());
-                        viewOrder(array);
-                        break;
                     }
+                    viewOrder(array);
+                    break;
                 case 6:
                     if(ascOrDesc==1){
                         array.sort(Comparator.comparing(order -> order.getDeliveryDate()));
-                        viewOrder(array);
-                        break;
                     }else{
                         array.sort(Comparator.comparing((Order order) ->order.getDeliveryDate()).reversed());
-                        viewOrder(array);
-                        break;
                     }
+                    viewOrder(array);
+                    break;
 
                 default:
-                    throw new IllegalStateException("Unexpected value: " + number);
+                    System.out.println("Enter a proper value ");
+                    continue;
+                    //throw new IllegalStateException("Unexpected value: " + number);
             }
 
         }
     }
 
+    @Override
     //view order for sorting option
     //todo format the data in a proper manner
     public void viewOrder(ArrayList<Order> array){
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("Order Id| order Description| Delivery Address | OrderDate | Amount| Delivery Date| Status");
-        System.out.println("-----------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("| Order Id | Order Description  |    Delivery Address     |     Order Date     |  Amount  |   Delivery Date    |   Status  |");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
         for (Order order : array) {
-            System.out.print(order.getOrderId()+" | ");
-            System.out.print(order.getOrderDescription()+" | ");
-            System.out.print(order.getDeliveryAddress()+" | ");
-            System.out.print(order.getOrderDate()+" | ");
-            System.out.print(order.getAmount()+" | ");
-            System.out.print(order.getDeliveryDate()+" | ");
-            System.out.print(order.getStatus()+" | ");
-            System.out.println();
+            System.out.println(order.toString());
+//            System.out.print(order.getOrderId()+" | ");
+//            System.out.print(order.getOrderDescription()+" | ");
+//            System.out.print(order.getDeliveryAddress()+" | ");
+//            System.out.print(order.getOrderDate()+" | ");
+//            System.out.print(order.getAmount()+" | ");
+//            System.out.print(order.getDeliveryDate()+" | ");
+//            System.out.print(order.getStatus()+" | ");
+//            System.out.println();
         }
+        System.out.println("\n\n");
     }
 
 
+    public void generateReport() {
+        while(true) {
+            System.out.println("-------------Choose Report Generation Option-----------");
+            System.out.println("1--> Export All");
+            System.out.println("2--> By Status");
+            System.out.println("3-->exit");
+            int number = sc.nextInt();
+            if(number==3){
+                break;
+            }
+            FileWritng fw;
+            switch (number){
+                case 1:
+                    //for exporting all the orders to the report
+                    //sorting based on the order id and then generating the report
+                    ArrayList<Order> array = Order.arr;
+                    array.sort(Comparator.comparing(order -> order.getOrderId()));
+                    fw = new FileWritng(array);
+                    //starting the thread
+                    fw.start();
+                    try {
+                        //waiting for the process to complete
+                        fw.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                case 2:
+                    //based on status
+                    System.out.println("-------------Choose Report Generation Option-----------");
+                    System.out.println("1--> In Progress");
+                    System.out.println("2--> Delivered");
+                    System.out.println("3--> Cancelled");
+                    int choice = sc.nextInt();
+                    //for storing the orders based on the user input
+                    ArrayList<Order> arrayByStatus;
+                    switch (choice){
+                        case 1: arrayByStatus=sortBasedOnStatus(Order.arr,"In Progress");
+
+                            //sorting the based on orderId
+                            //arrayByStatus.sort(Comparator.comparing(order -> order.getOrderId()));
+
+                            //calling the thread for report generation
+                            fw = new FileWritng(arrayByStatus);
+                            //starting the file
+                            fw.start();
+
+                            try {
+                                //waiting for the processs to complete
+                                //the process--> writing content to the file
+                                fw.join();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
+                        case 2:
+                            arrayByStatus = sortBasedOnStatus(Order.arr,"Delivered");
+
+                            //sorting the based on orderId
+                            //arrayByStatus.sort(Comparator.comparing(order -> order.getOrderId()));
+                            //calling the thread for report generation
+                            fw = new FileWritng(arrayByStatus);
+                            //starting the thread
+                            fw.start();
+
+                            try {
+                                //waiting until the file writing process completes
+                                fw.join();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
+                        case 3:
+                            arrayByStatus = sortBasedOnStatus(Order.arr,"Cancelled");
+
+                            //sorting the based on orderId
+                            //arrayByStatus.sort(Comparator.comparing(order -> order.getOrderId()));
+                            //calling the thread for report generation
+                            fw = new FileWritng(arrayByStatus);
+                            //start the thread
+                            fw.start();
+
+                            try {
+                                //waiting until the process completes
+                                fw.join();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
+                        default:
+                            System.out.println("Enter a correct value.");
+                    }
+                    break;
+
+                default:
+                    System.out.println("enter a proper value.");;
+            }
+        }
+    }
+
+    private ArrayList<Order> sortBasedOnStatus(ArrayList<Order> arr, String str) {
+        ArrayList<Order> array = new ArrayList<>();
+        for(Order order: arr){
+            if(order.getStatus().trim().equals(str)){
+                array.add(order);
+            }
+        }
+        //sorting based on order id
+        array.sort(Comparator.comparing(order -> order.getOrderId()));
+        return array;
+    }
 
 }

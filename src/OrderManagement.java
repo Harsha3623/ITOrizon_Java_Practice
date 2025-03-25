@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public interface OrderManagement {
      public abstract void addOrder();
 
@@ -5,6 +7,9 @@ public interface OrderManagement {
 
      //method overloading
      void viewOrder(String orderID);
+
+     //view order for sorting option
+     void viewOrder(ArrayList<Order> array);
 
      void markDelivered();
 
@@ -15,4 +20,7 @@ public interface OrderManagement {
      void exit();
 
      void sortOrder();
+
+
+     void generateReport();
 }

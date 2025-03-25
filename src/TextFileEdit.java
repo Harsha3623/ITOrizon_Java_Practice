@@ -13,7 +13,7 @@ public class TextFileEdit {
 
         // Print the local date and time
         System.out.println("Current Local Date and Time: " + formattedDateTime);
-//        Path filePath = Paths.get("localtime.txt");
+//        Path filePath = Paths.get("Order_Transaction.txt");
 //        try{
 //            //write to file
 //            Files.writeString(filePath,formattedDateTime);
