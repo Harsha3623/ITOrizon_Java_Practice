@@ -12,17 +12,18 @@ public class ImplementedClass  implements OrderManagement{
     //Scanner class
     Scanner sc = new Scanner(System.in);
 
+    //add order tot the arraylist
     @Override
     public void addOrder() {
-        Order or = new Order();
+        new Order();
     }
 
 
-    //todo format the data in a proper manner
+    //viewing all the order list sort based on the order id
     @Override
     public void viewOrder() {
     ArrayList<Order> array = Order.arr;
-        array.sort(Comparator.comparing(order -> order.getOrderId()));
+        array.sort(Comparator.comparing(Order::getOrderId));
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
         System.out.println("| Order Id | Order Description  |    Delivery Address     |     Order Date     |  Amount  |   Delivery Date    |   Status  |");
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
@@ -44,20 +45,22 @@ public class ImplementedClass  implements OrderManagement{
         }
 
     //method overloading for view order by id and view order
-    //todo format the data in a proper manner
+
     @Override
     public void viewOrder(String orderID) {
         ArrayList<Order> array=Order.arr;
-        System.out.println("Order Details: ");
+        System.out.println("--------------------------");
+        System.out.println("    Order Details: ");
+        System.out.println("--------------------------");
         for(Order order: array){
-            if(order.getOrderId().equals(orderID)){
+            if(order.getOrderId().trim().equals(orderID)){
                 System.out.println("Order ID: "+order.getOrderId());
                 System.out.println("Order Description: "+order.getOrderDescription());
                 System.out.println("Order Delivery Address: "+order.getDeliveryAddress());
                 System.out.println("Order Date: "+order.getOrderDate());
                 System.out.println("Order Amount: "+order.getAmount());
-                System.out.println("Order Delievry Date: "+order.getDeliveryDate());
-                System.out.println("Order Sataus: "+order.getStatus());
+                System.out.println("Order Delivery Date: "+order.getDeliveryDate());
+                System.out.println("Order Status: "+order.getStatus());
                 System.out.println();
                 break;
             }
@@ -82,9 +85,11 @@ public class ImplementedClass  implements OrderManagement{
                             System.out.println("The order cannot be delivered it is cancelled by the user..");
                             break;
                         }else if((order.getStatus().trim()).equals("Delivered")){
+                            //Order is already delivered to the user
                             System.out.println("The order is already delivered and cannot deliver again.");
                             break;
                         }else {
+                            //else deliver the order to the customer
                             order.setStatus("Delivered");
                             LocalDateTime curDate = LocalDateTime.now();
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH-mm-ss");
@@ -106,12 +111,12 @@ public class ImplementedClass  implements OrderManagement{
                         break outer;
                     } else {
                         System.out.println("please enter either Yes or no option..");
-                        continue;
+
                     }
                 }
             }else{
                 System.out.println("Please enter a valid order ID..");
-                continue;
+
             }
         }
 
@@ -125,15 +130,22 @@ public class ImplementedClass  implements OrderManagement{
             if(Order.hs.contains(orderId)){
                 for(Order order: Order.arr){
                     if((order.getOrderId().trim()).equals(orderId)){
-                        if(!(order.getStatus().trim()).equals("Cancelled")){
+                        //what is the order is delivered
+                        //need to print the order is delievred
+                        if((order.getStatus().trim()).equals("Delivered")){
+                            System.out.println("The order is delivered and cannot be cancelled.");
+                        }
+                        else if((order.getStatus().trim()).equals("In Progress")){
                         order.setStatus("Cancelled");
-                        String str = null;
-                        order.setDeliveryDate(str);
+                        //String str = null;
+                        order.setDeliveryDate((String) null);
                             System.out.println("The order has been cancelled successfully.");
                         }else {
+                            //if order is cancelled already by the user
                             System.out.println("Order has been already cancelled.");
 
                         }
+
                     }
                 }
                 while(true){
@@ -149,7 +161,7 @@ public class ImplementedClass  implements OrderManagement{
                 }
             }else{
                 System.out.println("Plase enter a valid order id to cancel the order.");
-                continue;
+
             }
         }
     }
@@ -193,9 +205,9 @@ public class ImplementedClass  implements OrderManagement{
         //Todo Update the file path to the actual file path
         try(BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\Harsha\\IdeaProjects\\Order Management System 2\\src\\Order_Transaction.txt"))){
         for(Order order: Order.arr){
-            writer.write(order.getOrderId()+","+order.getOrderDescription()+","+
-                    order.getDeliveryAddress()+","+order.getOrderDate()+","+order.getAmount()+
-                    ","+order.getDeliveryDate()+","+order.getStatus());
+            writer.write(order.getOrderId()+"#,; ' ,;#"+order.getOrderDescription()+"#,; ' ,;#"+
+                    order.getDeliveryAddress()+"#,; ' ,;#"+order.getOrderDate()+"#,; ' ,;#"+order.getAmount()+
+                    "#,; ' ,;#"+order.getDeliveryDate()+"#,; ' ,;#"+order.getStatus());
             writer.newLine();
 
         }
@@ -240,7 +252,7 @@ public class ImplementedClass  implements OrderManagement{
                 try {
                     sortOrder = sc.nextInt();
                     sc.nextLine();
-                    if(sortOrder==1| sortOrder==2){
+                    if(sortOrder==1 | sortOrder==2){
                         ascOrDesc=sortOrder;
                         break;
                     }else {
@@ -347,17 +359,18 @@ public class ImplementedClass  implements OrderManagement{
             System.out.println("2--> By Status");
             System.out.println("3-->exit");
             int number = sc.nextInt();
+            sc.nextLine();
             if(number==3){
                 break;
             }
-            FileWritng fw;
+            FileWriting fw;
             switch (number){
                 case 1:
                     //for exporting all the orders to the report
                     //sorting based on the order id and then generating the report
                     ArrayList<Order> array = Order.arr;
                     array.sort(Comparator.comparing(order -> order.getOrderId()));
-                    fw = new FileWritng(array);
+                    fw = new FileWriting(array);
                     //starting the thread
                     fw.start();
                     try {
@@ -374,6 +387,7 @@ public class ImplementedClass  implements OrderManagement{
                     System.out.println("2--> Delivered");
                     System.out.println("3--> Cancelled");
                     int choice = sc.nextInt();
+                    sc.nextLine();
                     //for storing the orders based on the user input
                     ArrayList<Order> arrayByStatus;
                     switch (choice){
@@ -383,7 +397,7 @@ public class ImplementedClass  implements OrderManagement{
                             //arrayByStatus.sort(Comparator.comparing(order -> order.getOrderId()));
 
                             //calling the thread for report generation
-                            fw = new FileWritng(arrayByStatus);
+                            fw = new FileWriting(arrayByStatus);
                             //starting the file
                             fw.start();
 
@@ -394,6 +408,7 @@ public class ImplementedClass  implements OrderManagement{
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
+
                             break;
                         case 2:
                             arrayByStatus = sortBasedOnStatus(Order.arr,"Delivered");
@@ -401,7 +416,7 @@ public class ImplementedClass  implements OrderManagement{
                             //sorting the based on orderId
                             //arrayByStatus.sort(Comparator.comparing(order -> order.getOrderId()));
                             //calling the thread for report generation
-                            fw = new FileWritng(arrayByStatus);
+                            fw = new FileWriting(arrayByStatus);
                             //starting the thread
                             fw.start();
 
@@ -418,7 +433,7 @@ public class ImplementedClass  implements OrderManagement{
                             //sorting the based on orderId
                             //arrayByStatus.sort(Comparator.comparing(order -> order.getOrderId()));
                             //calling the thread for report generation
-                            fw = new FileWritng(arrayByStatus);
+                            fw = new FileWriting(arrayByStatus);
                             //start the thread
                             fw.start();
 

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Order {
@@ -18,7 +19,7 @@ public class Order {
                 reader = new BufferedReader(new FileReader("C:\\Users\\Harsha\\IdeaProjects\\Order Management System 2\\src\\Order_Transaction.txt"));
                 String line;
                 while((line=reader.readLine())!=null){
-                    String[] data = line.split(",");
+                    String[] data = line.split("#,; ' ,;#");
                     hs.add(data[0]);
                     arr.add(new Order(data[0],data[1],data[2],data[3],Double.parseDouble(data[4]),data[5],data[6]));
                 }
@@ -35,7 +36,7 @@ public class Order {
     private String status;
     private String deliveryDate;
     //todo update the file path to correct file
-    final static String filePath = "C:\\Users\\Harsha\\IdeaProjects\\Order Management System\\src\\Order_Transaction.txt";
+    //final static String filePath = "C:\\Users\\Harsha\\IdeaProjects\\Order Management System 2\\src\\data.txt";
 
     public Order(String orderId, String orderDescription, String deliveryAddress, String orderDate, double amount, String deliveryDate, String status) {
         this.orderId = orderId;
@@ -51,8 +52,8 @@ public class Order {
         while(true) {
             System.out.println("Enter the Order Description: ");
             String des = sc.nextLine();
-            if(des.isEmpty()|| des.length()<3){
-                System.out.println("Enter a product description..");
+            if(des.isEmpty() | des.length()<3){
+                System.out.println("Enter a proper product description..");
                 continue;
             }else {
                 this.orderDescription=des;
@@ -65,7 +66,7 @@ public class Order {
         while(true) {
             System.out.println("Enter the delivery address:");
             String addres = sc.nextLine();
-            if(addres.isEmpty()|| addres.length()<3){
+            if(addres.isEmpty() | addres.length()<3){
                 System.out.println("Enter correct delivery address ");
                 continue;
             }else {
@@ -77,7 +78,7 @@ public class Order {
 
     public void setOrderDate() {
         LocalDateTime curdate = LocalDateTime.now();
-        DateTimeFormatter formattter = DateTimeFormatter.ofPattern("yyy-MM-dd HH-mm-ss");
+        DateTimeFormatter formattter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
         String orderDate = curdate.format(formattter);
         this.orderDate = orderDate;
         setDeliveryDate(curdate);
@@ -86,8 +87,18 @@ public class Order {
     public void setAmount() {
         while (true) {
             System.out.println("enter the amount: ");
-            double amount = sc.nextDouble();
-            if (amount < 50) {
+
+            double amount=0;
+            try {
+                amount = sc.nextDouble();
+                sc.nextLine();
+            }catch (InputMismatchException e){
+                System.out.println("Please enter Amount only No strings are allowed.");
+                sc.nextLine();
+                continue;
+            }
+
+            if (amount < 10) {
                 System.out.println("please enter a correct value.");
                 continue;
             } else {
@@ -103,7 +114,7 @@ public class Order {
 
     public void setDeliveryDate(LocalDateTime curDate) {
             LocalDateTime deldate = curDate.plusDays(5);
-            DateTimeFormatter formattter = DateTimeFormatter.ofPattern("yyy-MM-dd HH-mm-ss");
+            DateTimeFormatter formattter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss");
             String deliveryDate = deldate.format(formattter);
             this.deliveryDate = deliveryDate;
 
@@ -127,7 +138,9 @@ public class Order {
         while(true) {
             System.out.println("Enter the Order ID: ");
             String ordId = sc.nextLine();
-            if (hs.contains(ordId)) {
+            if(ordId.isEmpty()){
+                System.out.println("Eneter a proper orderId..");
+            }else if (hs.contains(ordId)) {
                 System.out.println("The order id is present in the set ");
                 continue;
             } else {

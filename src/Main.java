@@ -1,4 +1,3 @@
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -12,15 +11,13 @@ public class Main {
 
         ImplementedClass im= new ImplementedClass();
 
-        /**
-         * Menu for Order management system
+        /*
+          Menu for Order management system
          */
-
-        //todo proper formatting for data
         outer: while(true){
             System.out.println("--------------------------------------");
             System.out.println("------Order Management System---------");
-            System.out.println("----------------MENU------------------");
+            System.out.println("--------------MENU--------------------");
             System.out.println("--------------------------------------");
 
             System.out.println("1--> Add Order");
@@ -28,7 +25,7 @@ public class Main {
             System.out.println("2--> View Order");
             //completed
             System.out.println("3--> View By Order ID");
-            //Todo In progress
+            //completed
             System.out.println("4--> Sort Order");
             //completed
             System.out.println("5--> Delete Order");
@@ -38,13 +35,14 @@ public class Main {
             System.out.println("7--> Cancel Order");
             //completed
             System.out.println("8--> Generate Report");
+
             System.out.println("9--> Exit");
 
             System.out.println("Enter your choice");
 
             int input;
             //for handling the input mismatch exception
-            // so if an user enters any other value then it will continue again
+            // so if a user enters any other value then it will continue again
             try {
                 input = sc.nextInt();
                 sc.nextLine();
@@ -69,26 +67,31 @@ public class Main {
                             break;
                         }else{
                             System.out.println("Enter a valid Order ID ");
-                            continue;
+                            //continue;
                         }
                     }
                     break;
+
                 case 4:
                     im.sortOrder();
                     break;
+
                 case 5:
                     im.deleteOrder();
                     break;
-                case 6:
 
+                case 6:
                     im.markDelivered();
                     break;
+
                 case 7:
                     im.cancelOrder();
                     break;
+
                 case 8:
                     im.generateReport();
                     break;
+
                 case 9:
                     im.exit();
                     break outer;
